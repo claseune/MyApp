@@ -13,6 +13,7 @@ import { RegisterPage } from '../register/register';
 export class LoginPage {
   private data: FormGroup;
 
+
   constructor(public navCtrl: NavController, public navParams: NavParams, public formBuilder: FormBuilder,
     public toastCtrl: ToastController, public modalCtrl: ModalController) {
 
@@ -48,10 +49,26 @@ export class LoginPage {
         console.log(error.message)
       })
   }
+  FBlogin() {
+    var provider = new firebase.auth.FacebookAuthProvider();
+    provider.addScope('user_birthday');
+    firebase.auth().signInWithPopup(provider).then((result) => {
+      var token = result.credential.accessToken;
+      var user = result.user;
+      console.log(result + ' ' + user + ' ' + token);
+        this.navCtrl.setRoot(HomePage);
+    }).catch(function (error) {
+      console.log('Error: ' + error)
+    })
+
+    
+
+  }
 
   register() {
     this.modalCtrl.create(RegisterPage).present();
   }
+
 
   ionViewDidLoad() {
 

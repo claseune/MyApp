@@ -31,7 +31,8 @@
   </form>
 
   <ion-list>
-    <button ion-item *ngFor=" let record of records | async">
+    <ion-item-sliding *ngFor=" let record of records | async">
+      <button ion-item>
       <ion-avatar item-start>
         <img src="img/avatar-finn.png">
       </ion-avatar>
@@ -39,5 +40,18 @@
       <h3>{{record.gender}}</h3>
       <p>{{record.hobby}}</p>
     </button>
+      <ion-item-options side="left">
+        <button (click)="edit(record.$key)" ion-button color="primary">
+          <ion-icon name="create"></ion-icon>
+          Editar
+        </button>
+      </ion-item-options>
+      <ion-item-options side="right">
+        <button (click)="delete(record.$key, record.name)"  ion-button color="secondary">
+          <ion-icon name="trash"></ion-icon>
+          Eliminar
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
   </ion-list>
 </ion-content>

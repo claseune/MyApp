@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, AlertController, ModalController, ToastController  } from 'ionic-angular';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { AngularFireDatabase, FirebaseListObservable} from 'angularfire2/database';
 import * as firebase from 'firebase';
 
+import { EditPage } from '../edit/edit';
 
 @Component({
   selector: 'page-home',
@@ -15,7 +16,7 @@ export class HomePage {
   records: FirebaseListObservable<any>;
    private exampleFormData: FormGroup;
 
-  constructor(public navCtrl: NavController, db: AngularFireDatabase,  public formBuilder: FormBuilder) {
+  constructor(public navCtrl: NavController, db: AngularFireDatabase,  public formBuilder: FormBuilder, public alertCtrl: AlertController, public modalCtrl: ModalController, public toastCtrl: ToastController) {
        this.records =  db.list('/users')
 
        this.exampleFormData = this.formBuilder.group({
@@ -27,12 +28,54 @@ export class HomePage {
   }
 
 
+
   save(){
     if(this.exampleFormData.valid){
       this.records.push(this.exampleFormData.value)
     }else{
       console.error('verifique su información')
     }   
+  }
+
+  delete(key, name){
+
+    let deleteToast = this.toastCtrl.create({
+      position: 'top',
+      message: name + 'ha sido borrado',
+      showCloseButton: true,
+      closeButtonText: 'OK'
+    });
+    let deleteAlert = this.alertCtrl.create({
+      title: 'Eliminar',
+      subTitle: 'Vas a eliminar ' + name,
+      buttons: [
+        {
+          text: 'Cancelar',
+          handler: () =>{
+
+          }
+        },
+        {
+          text: 'OK',
+          handler: () => {
+            this.records.remove(key).then(_ => deleteToast.present())
+          }
+        }
+      ]
+    })
+
+    deleteAlert.present();
+
+    console.log(key);
+    
+  }
+
+  edit(key){
+    let info = {
+      key: key
+    }
+    this.modalCtrl.create(EditPage, info).present();
+
   }
 
   ionViewDidLoad() {
