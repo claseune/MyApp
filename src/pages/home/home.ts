@@ -17,7 +17,7 @@ export class HomePage {
    private exampleFormData: FormGroup;
 
   constructor(public navCtrl: NavController, db: AngularFireDatabase,  public formBuilder: FormBuilder, public alertCtrl: AlertController, public modalCtrl: ModalController, public toastCtrl: ToastController) {
-       this.records =  db.list('/users')
+       this.records =  db.list('/usuarios')
 
        this.exampleFormData = this.formBuilder.group({
          name: ['', Validators.required],
@@ -26,12 +26,13 @@ export class HomePage {
        })
 
   }
-
-
-
   save(){
     if(this.exampleFormData.valid){
-      this.records.push(this.exampleFormData.value)
+      this.records.push({
+        Nombre: 'Andres',
+        FechaDeNacimiento: '17/09/1993',
+        ComidaFavorita: 'Pizza'
+      })
     }else{
       console.error('verifique su información')
     }   
